@@ -21,10 +21,11 @@ RUN apk --update add wget \
   autoconf \
   cyrus-sasl-dev \
   libgsasl-dev \
-  supervisor
+  supervisor \
+  openssl-dev
 
 RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml pcntl
-RUN pecl channel-update pecl.php.net && pecl install memcached mcrypt-1.0.1 && docker-php-ext-enable memcached
+RUN pecl channel-update pecl.php.net && pecl install memcached mcrypt-1.0.1 && docker-php-ext-enable memcached && pecl install mongodb && docker-php-ext-enable mongodb
 
 # Add a non-root user:
 ARG PUID=1000
