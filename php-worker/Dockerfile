@@ -25,7 +25,7 @@ RUN apk --update add wget \
   openssl-dev
 
 RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml pcntl
-RUN pecl channel-update pecl.php.net && pecl install memcached mcrypt-1.0.1 && docker-php-ext-enable memcached && pecl install mongodb && docker-php-ext-enable mongodb
+RUN pecl channel-update pecl.php.net && pecl install memcached mcrypt-1.0.1 && docker-php-ext-enable memcached
 
 # Add a non-root user:
 ARG PUID=1000
@@ -47,6 +47,17 @@ ARG INSTALL_BCMATH=false
 RUN if [ ${INSTALL_BCMATH} = true ]; then \
     docker-php-ext-install bcmath \
 ;fi
+
+###########################################################################
+# MongoDB:
+###########################################################################
+
+RUN if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+      pecl install mongo && \
+      docker-php-ext-enable mongo \
+    ;fi && \
+    pecl install mongodb && \
+    docker-php-ext-enable mongodb
 
 # Install PostgreSQL drivers:
 ARG INSTALL_PGSQL=false
